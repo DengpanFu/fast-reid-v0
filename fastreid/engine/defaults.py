@@ -10,7 +10,7 @@ since they are meant to represent the "common default behavior" people need in t
 
 import argparse
 import logging
-import os
+import os, random
 import sys
 from collections import OrderedDict
 
@@ -59,7 +59,8 @@ def default_argument_parser():
     # PyTorch still may leave orphan processes in multi-gpu training.
     # Therefore we use a deterministic way to obtain port,
     # so that users are aware of orphan processes by seeing the port occupied.
-    port = 2 ** 15 + 2 ** 14 + hash(os.getuid() if sys.platform != "win32" else 1) % 2 ** 14
+    # port = 2 ** 15 + 2 ** 14 + hash(os.getuid() if sys.platform != "win32" else 1) % 2 ** 14 + 6
+    port = 34561 + random.randint(1, 10000)
     parser.add_argument("--dist-url", default="tcp://127.0.0.1:{}".format(port))
     parser.add_argument(
         "opts",

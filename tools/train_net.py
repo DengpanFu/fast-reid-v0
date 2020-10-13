@@ -8,7 +8,7 @@
 import logging
 import os
 import sys
-
+from sklearn import metrics
 sys.path.append('.')
 
 from fastreid.config import get_cfg

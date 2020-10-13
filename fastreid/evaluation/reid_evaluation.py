@@ -4,7 +4,7 @@
 @contact: sherlockliao01@gmail.com
 """
 import copy
-import logging
+import os, logging
 from collections import OrderedDict
 from sklearn import metrics
 
@@ -31,16 +31,19 @@ class ReidEvaluator(DatasetEvaluator):
         self.features = []
         self.pids = []
         self.camids = []
+        self.names = []
 
     def reset(self):
         self.features = []
         self.pids = []
         self.camids = []
+        self.names = []
 
     def process(self, inputs, outputs):
         self.pids.extend(inputs["targets"])
         self.camids.extend(inputs["camid"])
         self.features.append(outputs.cpu())
+        self.names.extend([os.path.basename(x) for x in inputs["img_path"]])
 
     @staticmethod
     def cal_dist(metric: str, query_feat: torch.tensor, gallery_feat: torch.tensor):
@@ -68,23 +71,43 @@ class ReidEvaluator(DatasetEvaluator):
             camids = comm.gather(self.camids)
             camids = sum(camids, [])
 
+            names = comm.gather(self.names)
+            names = sum(names, [])
+
             if not comm.is_main_process():
                 return {}
         else:
             features = self.features
             pids = self.pids
             camids = self.camids
+            names = self.names
 
         features = torch.cat(features, dim=0)
         # query feature, person ids and camera ids
         query_features = features[:self._num_query]
         query_pids = np.asarray(pids[:self._num_query])
         query_camids = np.asarray(camids[:self._num_query])
+        query_names = names[:self._num_query]
 
         # gallery features, person ids and camera ids
         gallery_features = features[self._num_query:]
         gallery_pids = np.asarray(pids[self._num_query:])
         gallery_camids = np.asarray(camids[self._num_query:])
+        gallery_names = names[self._num_query:]
+
+        # save_dicts = {'q_feat': query_features.numpy(), 
+        #               'q_id': query_pids, 
+        #               'q_cam': query_camids, 
+        #               'q_name': query_names, 
+        #               'g_feat': gallery_features.numpy(), 
+        #               'g_id': gallery_pids, 
+        #               'g_cam': gallery_camids, 
+        #               'g_name': gallery_names}
+        # import pickle
+        # print('Saving features ...')
+        # with open('feats/pcl_filter_flip_aug.pkl', 'wb') as f:
+        #     pickle.dump(save_dicts, f)
+
 
         self._results = OrderedDict()
 

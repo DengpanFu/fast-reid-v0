@@ -1,5 +1,5 @@
 from .config import CfgNode as CN
-
+import os
 # -----------------------------------------------------------------------------
 # Convention about Training / Test specific parameters
 # -----------------------------------------------------------------------------
@@ -125,6 +125,7 @@ _C.INPUT = CN()
 _C.INPUT.SIZE_TRAIN = [256, 128]
 # Size of the image during test
 _C.INPUT.SIZE_TEST = [256, 128]
+_C.INPUT.FLIP_TEST = False
 
 # Random probability for image horizontal flip
 _C.INPUT.DO_FLIP = True
@@ -160,10 +161,14 @@ _C.INPUT.RPT.PROB = 0.5
 # Dataset
 # -----------------------------------------------------------------------------
 _C.DATASETS = CN()
+# Root of dataset
+_C.DATASETS.ROOT = os.getenv("FASTREID_DATASETS", "datasets")
 # List of the dataset names for training
 _C.DATASETS.NAMES = ("Market1501",)
 # List of the dataset names for testing
 _C.DATASETS.TESTS = ("Market1501",)
+# other specific dataset setting
+_C.DATASETS.KWARGS = []
 # Combine trainset and testset joint training
 _C.DATASETS.COMBINEALL = False
 

@@ -1,0 +1,14 @@
+_BASE_: "../Base-MGN.yml"
+
+MODEL:
+  BACKBONE:
+    WITH_IBN: True
+
+DATASETS:
+  NAMES: ("PCL",)
+  TESTS: ("PCL",)
+
+INPUT:
+  FLIP_TEST: True
+
+OUTPUT_DIR: "logs/pcl/mgn_R50-ibn_dev1"

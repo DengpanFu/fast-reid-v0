@@ -1,0 +1,13 @@
+_BASE_: "../Base-MGN.yml"
+
+MODEL:
+  BACKBONE:
+    WITH_IBN: False
+
+DATASETS:
+  NAMES: ("CMDM",)
+  TESTS: ("CMDM",)
+  KWARGS: [['data_name','duke'], ['split_mode','id'], ['split_ratio',0.3]]
+  ROOT: "/home/dengpanfu/Re-ID/mspcl/data"
+
+OUTPUT_DIR: "logs/dukemtmc/mgn_R50"

@@ -1,0 +1,21 @@
+_BASE_: "../Base-MGN.yml"
+
+MODEL:
+  BACKBONE:
+    WITH_IBN: True
+
+DATASETS:
+  NAMES: ("PCL",)
+  TESTS: ("PCL",)
+
+INPUT:
+  FLIP_TEST: True
+  DO_AUGMIX: True
+  DO_AUTOAUG: False
+  REA:
+    MEAN:
+    - 0.0
+    - 0.0
+    - 0.0
+
+OUTPUT_DIR: "logs/pcl/mgn_R50-ibn_mix_noauto_re0"

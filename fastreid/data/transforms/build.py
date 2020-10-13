@@ -67,5 +67,7 @@ def build_transforms(cfg, is_train=True):
     else:
         size_test = cfg.INPUT.SIZE_TEST
         res.append(T.Resize(size_test, interpolation=3))
+        if cfg.INPUT.FLIP_TEST:
+            res.append(T.RandomHorizontalFlip(p=1.01))
     res.append(ToTensor())
     return T.Compose(res)

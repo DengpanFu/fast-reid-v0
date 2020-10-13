@@ -15,7 +15,7 @@ from .common import CommDataset
 from .datasets import DATASET_REGISTRY
 from .transforms import build_transforms
 
-_root = os.getenv("FASTREID_DATASETS", "datasets")
+# _root = os.getenv("FASTREID_DATASETS", "datasets")
 
 
 def build_reid_train_loader(cfg):
@@ -24,7 +24,12 @@ def build_reid_train_loader(cfg):
 
     train_items = list()
     for d in cfg.DATASETS.NAMES:
-        dataset = DATASET_REGISTRY.get(d)(root=_root, combineall=cfg.DATASETS.COMBINEALL)
+        if len(cfg.DATASETS.KWARGS):
+            kwargs = {k:v for k,v in cfg.DATASETS.KWARGS}
+        else:
+            kwargs = {}
+        dataset = DATASET_REGISTRY.get(d)(root=cfg.DATASETS.ROOT, 
+                    combineall=cfg.DATASETS.COMBINEALL, **kwargs)
         if comm.is_main_process():
             dataset.show_train()
         train_items.extend(dataset.train)

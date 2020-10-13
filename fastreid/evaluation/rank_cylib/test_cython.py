@@ -2,7 +2,7 @@ import sys
 import timeit
 import numpy as np
 import os.path as osp
-
+from sklearn import metrics
 sys.path.insert(0, osp.dirname(osp.abspath(__file__)) + '/../../..')
 
 from fastreid.evaluation import evaluate_rank

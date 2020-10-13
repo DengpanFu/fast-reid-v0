@@ -6,3 +6,10 @@ __pycache__
 logs/
 .ipynb_checkpoints
 logs
+pre_models
+feats
+tools/iia
+/logs/*
+!/logs/.gitkeep
+/datasets/*
+!/datasets/.gitkeep
