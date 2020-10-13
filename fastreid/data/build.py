@@ -80,7 +80,25 @@ def build_reid_test_loader(cfg, dataset_name):
     cfg = cfg.clone()
     cfg.defrost()
     
-    dataset = DATASET_REGISTRY.get(dataset_name)(root=_root)
+    if len(cfg.DATASETS.KWARGS):
+        kwargs = {}
+        args = [x.strip() for x in cfg.DATASETS.KWARGS.split('+')]
+        for arg in args:
+            key, value = [x.strip() for x in arg.split(':')]
+            if '.' in value and value.replace('.', '').isdigit():
+                kwargs[key] = float(value)
+            elif 'e-' in value and value.replace('e-', '').isdigit():
+                kwargs[key] = float(value)
+            elif 'e' in value and value.replace('e', '').isdigit():
+                kwargs[key] = float(value)
+            elif value.isdigit():
+                kwargs[key] = int(value)
+            else:
+                kwargs[key] = value
+    else:
+        kwargs = {}
+    dataset = DATASET_REGISTRY.get(dataset_name)(root=cfg.DATASETS.ROOT, **kwargs)
+
     if comm.is_main_process():
         dataset.show_test()
     test_items = dataset.query + dataset.gallery
