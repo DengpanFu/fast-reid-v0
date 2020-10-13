@@ -25,7 +25,20 @@ def build_reid_train_loader(cfg):
     train_items = list()
     for d in cfg.DATASETS.NAMES:
         if len(cfg.DATASETS.KWARGS):
-            kwargs = {k:v for k,v in cfg.DATASETS.KWARGS}
+            kwargs = {}
+            args = [x.strip() for x in cfg.DATASETS.KWARGS.split('+')]
+            for arg in args:
+                key, value = [x.strip() for x in arg.split(':')]
+                if '.' in value and value.replace('.', '').isdigit():
+                    kwargs[key] = float(value)
+                elif 'e-' in value and value.replace('e-', '').isdigit():
+                    kwargs[key] = float(value)
+                elif 'e' in value and value.replace('e', '').isdigit():
+                    kwargs[key] = float(value)
+                elif value.isdigit():
+                    kwargs[key] = int(value)
+                else:
+                    kwargs[key] = value
         else:
             kwargs = {}
         dataset = DATASET_REGISTRY.get(d)(root=cfg.DATASETS.ROOT, 

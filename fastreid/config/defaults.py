@@ -168,7 +168,7 @@ _C.DATASETS.NAMES = ("Market1501",)
 # List of the dataset names for testing
 _C.DATASETS.TESTS = ("Market1501",)
 # other specific dataset setting
-_C.DATASETS.KWARGS = []
+_C.DATASETS.KWARGS = ''
 # Combine trainset and testset joint training
 _C.DATASETS.COMBINEALL = False
 
